@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using SimpleWPF.Repositories;
 
 namespace SimpleWPF.Models;
 
-public class Order
+public class Order : IEntity<int>
 {
     public int Id { get; set; }
     public string? Name { get; set; }

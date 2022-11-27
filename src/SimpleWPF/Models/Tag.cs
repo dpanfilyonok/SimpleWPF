@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using SimpleWPF.Repositories;
 
 namespace SimpleWPF.Models;
 
-public class Tag
+public class Tag : IEntity<int>
 {
-    [Key] public string? Name { get; set; }
+    public int Id { get; set; }
+    [Required] public string? Name { get; set; }
 
     public List<Order> Orders { get; set; } = new();
 }
