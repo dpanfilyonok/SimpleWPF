@@ -3,6 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using SimpleWPF.Data;
 
 namespace SimpleWPF.Repositories;
 
@@ -10,9 +11,9 @@ public class EntityRepository<TEntity, TKey> : ICrudRepository<TEntity, TKey>
     where TEntity : class, IEntity<TKey>, new()
     where TKey : IEquatable<TKey>
 {
-    private readonly DbContext _context;
+    private readonly ApplicationContext _context;
 
-    public EntityRepository(DbContext context)
+    public EntityRepository(ApplicationContext context)
     {
         _context = context;
     }
