@@ -4,9 +4,31 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SimpleWPF"
+        xmlns:vm="clr-namespace:SimpleWPF.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" 
+        d:DataContext="{d:DesignInstance vm:MainViewModel}">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
         
+        <UniformGrid Grid.Row="1" Grid.Column="1" Rows="3" Margin="10 0">
+            <UniformGrid.Resources>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Margin" Value="2"/>
+                </Style>
+            </UniformGrid.Resources>
+            <Button Command="{Binding CreateEmployeesWindowCommand}">1</Button>
+            <Button Command="{Binding CreateDepartmentsWindowCommand}">2</Button>
+            <Button Command="{Binding CreateOrdersWindowCommand}">3</Button>
+        </UniformGrid>
     </Grid>
 </Window>

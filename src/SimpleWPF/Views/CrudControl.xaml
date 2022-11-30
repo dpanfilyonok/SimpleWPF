@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="SimpleWPF.Views.CrudControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:SimpleWPF.Views"
+             xmlns:vm="clr-namespace:SimpleWPF.ViewModels"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <!-- <Setter Property="Width" Value="" /> -->
+            <Setter Property="Margin" Value="5" />
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <DockPanel LastChildFill="True">
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                <Button Command="{Binding AddCommand}">Create</Button>
+                <Button Command="{Binding RemoveCommand}"
+                        CommandParameter="{Binding SelectedItem}">Delete</Button>
+                <Button Command="{Binding UpdateCommand}"
+                        CommandParameter="{Binding SelectedItem}">Edit</Button>
+            </StackPanel>
+            <ListView ItemsSource="{Binding Items}"
+                      SelectedItem="{Binding SelectedItem}"
+                      x:Name="ItemList">
+            </ListView>
+        </DockPanel>
+    </Grid>
+</UserControl>
