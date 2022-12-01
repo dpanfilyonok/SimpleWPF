@@ -18,6 +18,9 @@ public partial class App : Application
     {
         Ioc.Default.ConfigureServices(ConfigureServices());
         Ioc.Default.GetRequiredService<ApplicationContext>();
+        
+        var logger = Ioc.Default.GetRequiredService<ILogger<App>>();
+        RegisterGlobalExceptionHandling(logger);
     }
     
     protected override void OnStartup(StartupEventArgs e)
@@ -32,7 +35,12 @@ public partial class App : Application
     {
         var services = new ServiceCollection();
 
-        services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
+        var logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .WriteTo.Console()
+            .CreateLogger();
+        
+        services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(logger, true));
         
         services.AddSingleton<ApplicationContext>();
         services.AddSingleton<ICrudRepository<Employee, int>, EntityRepository<Employee, int>>();
@@ -46,5 +54,20 @@ public partial class App : Application
         services.AddTransient<OrdersViewModel>();
         
         return services.BuildServiceProvider();
+    }
+    
+    private static void RegisterGlobalExceptionHandling(ILogger<App> log)
+    {
+        AppDomain.CurrentDomain.UnhandledException += 
+            (sender, args) => CurrentDomainOnUnhandledException(args, log);
+    }
+
+    private static void CurrentDomainOnUnhandledException(UnhandledExceptionEventArgs args, ILogger<App> log)
+    {
+        var exception = args.ExceptionObject as Exception;
+        var terminatingMessage = args.IsTerminating ? " The application is terminating." : string.Empty;
+        var exceptionMessage = exception?.Message ?? "An unmanaged exception occured.";
+        var message = string.Concat(exceptionMessage, terminatingMessage);
+        log.LogError(exception, message);
     }
 }

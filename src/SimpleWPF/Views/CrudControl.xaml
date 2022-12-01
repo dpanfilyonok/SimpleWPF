@@ -8,8 +8,15 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <Style TargetType="Button">
-            <!-- <Setter Property="Width" Value="" /> -->
             <Setter Property="Margin" Value="5" />
+        </Style>
+        <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button" x:Key="ForEdit">
+            <Setter Property="IsEnabled" Value="True" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding SelectedItem}" Value="{x:Null}">
+                    <Setter Property="IsEnabled" Value="False"></Setter>
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
     </UserControl.Resources>
     <Grid>
@@ -17,9 +24,11 @@
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                 <Button Command="{Binding AddCommand}">Create</Button>
                 <Button Command="{Binding RemoveCommand}"
-                        CommandParameter="{Binding SelectedItem}">Delete</Button>
+                        CommandParameter="{Binding SelectedItem}"
+                        Style="{StaticResource ForEdit}">Delete</Button>
                 <Button Command="{Binding UpdateCommand}"
-                        CommandParameter="{Binding SelectedItem}">Edit</Button>
+                        CommandParameter="{Binding SelectedItem}"
+                        Style="{StaticResource ForEdit}">Edit</Button>
             </StackPanel>
             <ListView ItemsSource="{Binding Items}"
                       SelectedItem="{Binding SelectedItem}"

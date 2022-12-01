@@ -19,6 +19,7 @@ public class ObservableEmployee : ObservableValidator
         set => SetProperty(_employee.Name, value, _employee, (e, val) => e.Name = val, true);
     }
     
+    [Required]
     [CustomValidation(typeof(ObservableEmployee), nameof(ValidateNamePart))]
     public string Surname
     {

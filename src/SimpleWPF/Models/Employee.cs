@@ -17,6 +17,11 @@ public class Employee : IEntity<int>
     public Department? Department { get; set; }
     
     public Department? SupervisorOfDepartment { get; set; }
+
+    public override string ToString()
+    {
+        return $"{Name} {Surname} {Patronymic} -- {DateOfBirth} -- {Gender} -- {Department?.ToString() ?? "<no department>"}";
+    }
 }
 
 public enum Gender

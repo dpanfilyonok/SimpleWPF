@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.EntityFrameworkCore;
 using SimpleWPF.Common;
 using SimpleWPF.Models;
 using SimpleWPF.Repositories;
@@ -25,10 +27,10 @@ public class EmployeesViewModel : ObservableObject, ICrudViewModel<Employee>
         _departments = departments;
         GetCommand = new RelayCommand(GetEmployeesMethod);
         AddCommand = new AsyncRelayCommand(AddEmployeeMethod);
-        RemoveCommand = new AsyncRelayCommand<Employee>(RemoveEmployeeMethod, (e) => e != null);
-        UpdateCommand = new AsyncRelayCommand<Employee>(UpdateEmployeeMethod, (e) => e != null);
-        
-        _items = _employees.GetAll().ToObservableCollection();
+        RemoveCommand = new AsyncRelayCommand<Employee>(RemoveEmployeeMethod);
+        UpdateCommand = new AsyncRelayCommand<Employee>(UpdateEmployeeMethod);
+
+        GetEmployeesMethod();
     }
     
     public ICommand GetCommand { get; }
@@ -43,7 +45,7 @@ public class EmployeesViewModel : ObservableObject, ICrudViewModel<Employee>
         set => SetProperty(ref _selectedItem, value);
     }
 
-    private ObservableCollection<Employee> _items;
+    private ObservableCollection<Employee> _items = null!;
     public ObservableCollection<Employee> Items 
     {
         get => _items;
@@ -57,29 +59,32 @@ public class EmployeesViewModel : ObservableObject, ICrudViewModel<Employee>
         {"Patronymic", "Patronymic"},
         {"Date Of Birth", "DateOfBirth"},
         {"Gender", "Gender"},
-        {"Department", "Department.Name"}
+        {"Department", "Department"}
     };
 
     private void GetEmployeesMethod()
     {
-        Items = _employees.GetAll().ToObservableCollection();
+        Items = _employees.GetAll().Include(e => e.Department).ToObservableCollection();
     }
     
     private async Task AddEmployeeMethod()
     {
         var employee = new Employee
         {
+            Name = "Enter name...",
+            Surname = "Enter surname...",
             DateOfBirth = DateTime.Now,
             Gender = Gender.Male
         };
-        var allDepartments = new List<Department> {new()};
-        var dialog = new EmployeeEditWindow {DataContext = new EmployeeViewModel(employee, allDepartments)};
+        
+        var allDepartments = _departments.GetAll().ToList();
+        var dialog = new EmployeeEditWindow { DataContext = new EmployeeViewModel(employee, allDepartments) };
         if (dialog.ShowDialog() == true)
         {
-            MessageBox.Show(employee.Gender.ToString());
-            MessageBox.Show(employee.DateOfBirth.ToString());
-            MessageBox.Show(employee.Department.Name);
-            // await _employees.AddAsync(employee);
+            employee.DepartmentId = employee.Department?.Id;
+            employee.Department = null;
+            await _employees.AddAsync(employee);
+            GetEmployeesMethod();
         }
     }
     
@@ -91,7 +96,16 @@ public class EmployeesViewModel : ObservableObject, ICrudViewModel<Employee>
     
     private async Task UpdateEmployeeMethod(Employee? employee)
     {
-        if (employee != null) await _employees.UpdateAsync(employee);
-        GetEmployeesMethod();
+        if (employee == null) return;
+        
+        var allDepartments = _departments.GetAll().ToList();
+        var dialog = new EmployeeEditWindow { DataContext = new EmployeeViewModel(employee, allDepartments) };
+        if (dialog.ShowDialog() == true)
+        {
+            employee.DepartmentId = employee.Department?.Id;
+            employee.Department = null;
+            await _employees.UpdateAsync(employee);
+            GetEmployeesMethod();
+        }
     }
 }

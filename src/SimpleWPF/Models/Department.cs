@@ -16,6 +16,6 @@ public class Department : IEntity<int>
 
     public override string ToString()
     {
-        return Name ?? "Unnamed deparment";
+        return $"{Name}";
     }
 }

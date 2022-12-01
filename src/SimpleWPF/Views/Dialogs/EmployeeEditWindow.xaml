@@ -29,16 +29,25 @@
                 <x:Type TypeName="model:Gender"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
+        <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button" x:Key="Save">
+            <Setter Property="IsEnabled" Value="True" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Employee.HasErrors}" Value="True">
+                    <Setter Property="IsEnabled" Value="False"></Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
+    
     <Grid>
         <DockPanel LastChildFill="True">
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button IsDefault="True" Click="OkButtonEventHandler">Save</Button>
+                <Button IsDefault="True" Click="OkButtonEventHandler" Style="{StaticResource Save}">Save</Button>
                 <Button IsCancel="True">Cancel</Button>
             </StackPanel>
             <StackPanel>
                 <TextBlock Text="Name" />
-                <TextBox Text="{Binding Employee.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+                <TextBox Text="{Binding Employee.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
                 
                 <TextBlock Text="Surname" />
                 <TextBox Text="{Binding Employee.Surname, UpdateSourceTrigger=PropertyChanged}" />
@@ -55,7 +64,7 @@
                 
                 <TextBlock Text="Department" />
                 <ComboBox ItemsSource="{Binding Departments}"
-                          SelectedItem="{Binding Employee.Department, UpdateSourceTrigger=PropertyChanged}"/>
+                          SelectedItem="{Binding Employee.Department}"/>
             </StackPanel>
         </DockPanel>
     </Grid>

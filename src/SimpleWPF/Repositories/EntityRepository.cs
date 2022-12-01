@@ -3,6 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SimpleWPF.Data;
 
 namespace SimpleWPF.Repositories;
@@ -11,15 +12,18 @@ public class EntityRepository<TEntity, TKey> : ICrudRepository<TEntity, TKey>
     where TEntity : class, IEntity<TKey>, new()
     where TKey : IEquatable<TKey>
 {
+    private readonly ILogger<EntityRepository<TEntity, TKey>> _logger;
     private readonly ApplicationContext _context;
 
-    public EntityRepository(ApplicationContext context)
+    public EntityRepository(ILogger<EntityRepository<TEntity, TKey>> logger, ApplicationContext context)
     {
+        _logger = logger;
         _context = context;
     }
     
     public IQueryable<TEntity> GetAll()
     {
+        _logger.LogInformation("kek");
         return _context.Set<TEntity>().AsNoTracking();
     }
 
@@ -42,6 +46,7 @@ public class EntityRepository<TEntity, TKey> : ICrudRepository<TEntity, TKey>
     {
         await _context.AddAsync(item);
         await _context.SaveChangesAsync();
+        _context.Entry(item).State = EntityState.Detached;
         return item.Id;
     }
 
@@ -49,12 +54,14 @@ public class EntityRepository<TEntity, TKey> : ICrudRepository<TEntity, TKey>
     {
         _context.Set<TEntity>().Remove(entity);
         await _context.SaveChangesAsync();
+        _context.Entry(entity).State = EntityState.Detached;
     }
 
     public async Task UpdateAsync(TEntity entity)
     {
         _context.Set<TEntity>().Update(entity);
         await _context.SaveChangesAsync();
+        _context.Entry(entity).State = EntityState.Detached;
     }
 
     public async Task SaveAsync()
