@@ -9,7 +9,7 @@ public interface ICrudRepository<TEntity, TKey> : IReadOnlyRepository<TEntity, T
     where TKey : IEquatable<TKey>
 {
     Task<TKey> AddAsync(TEntity item);
-    Task DeleteAsync(TKey id);
-    Task UpdateAsync(TKey id, Expression<Func<TEntity, TEntity>> updateFactory);
+    Task DeleteAsync(TEntity entity);
+    Task UpdateAsync(TEntity entity);
     Task SaveAsync();
 }

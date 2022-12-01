@@ -13,4 +13,9 @@ public class Department : IEntity<int>
     public Employee? Supervisor { get; set; } 
 
     public List<Employee> Employees { get; set; } = new();
+
+    public override string ToString()
+    {
+        return Name ?? "Unnamed deparment";
+    }
 }

@@ -2,6 +2,8 @@
 using System.Windows;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Serilog;
 using SimpleWPF.Data;
 using SimpleWPF.Models;
 using SimpleWPF.Repositories;
@@ -15,6 +17,7 @@ public partial class App : Application
     public App()
     {
         Ioc.Default.ConfigureServices(ConfigureServices());
+        Ioc.Default.GetRequiredService<ApplicationContext>();
     }
     
     protected override void OnStartup(StartupEventArgs e)
@@ -29,6 +32,8 @@ public partial class App : Application
     {
         var services = new ServiceCollection();
 
+        services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
+        
         services.AddSingleton<ApplicationContext>();
         services.AddSingleton<ICrudRepository<Employee, int>, EntityRepository<Employee, int>>();
         services.AddSingleton<ICrudRepository<Department, int>, EntityRepository<Department, int>>();
@@ -39,7 +44,7 @@ public partial class App : Application
         services.AddTransient<EmployeesViewModel>();
         services.AddTransient<DepartmentsViewModel>();
         services.AddTransient<OrdersViewModel>();
-    
+        
         return services.BuildServiceProvider();
     }
 }

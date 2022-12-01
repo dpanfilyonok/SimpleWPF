@@ -23,12 +23,12 @@
         <UniformGrid Grid.Row="1" Grid.Column="1" Rows="3" Margin="10 0">
             <UniformGrid.Resources>
                 <Style TargetType="{x:Type Button}">
-                    <Setter Property="Margin" Value="2"/>
+                    <Setter Property="Margin" Value="10"/>
                 </Style>
             </UniformGrid.Resources>
-            <Button Command="{Binding CreateEmployeesWindowCommand}">1</Button>
-            <Button Command="{Binding CreateDepartmentsWindowCommand}">2</Button>
-            <Button Command="{Binding CreateOrdersWindowCommand}">3</Button>
+            <Button Command="{Binding CreateEmployeesWindowCommand}">Employees</Button>
+            <Button Command="{Binding CreateDepartmentsWindowCommand}">Departments</Button>
+            <Button Command="{Binding CreateOrdersWindowCommand}">Orders</Button>
         </UniformGrid>
     </Grid>
 </Window>

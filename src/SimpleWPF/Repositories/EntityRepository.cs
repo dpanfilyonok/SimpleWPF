@@ -45,15 +45,16 @@ public class EntityRepository<TEntity, TKey> : ICrudRepository<TEntity, TKey>
         return item.Id;
     }
 
-    public async Task DeleteAsync(TKey id)
+    public async Task DeleteAsync(TEntity entity)
     {
-        var item = await GetAsync(id);
-        if (item != null) _context.Set<TEntity>().Remove(item);
+        _context.Set<TEntity>().Remove(entity);
+        await _context.SaveChangesAsync();
     }
 
-    public Task UpdateAsync(TKey id, Expression<Func<TEntity, TEntity>> updateFactory)
+    public async Task UpdateAsync(TEntity entity)
     {
-        throw new NotImplementedException();
+        _context.Set<TEntity>().Update(entity);
+        await _context.SaveChangesAsync();
     }
 
     public async Task SaveAsync()

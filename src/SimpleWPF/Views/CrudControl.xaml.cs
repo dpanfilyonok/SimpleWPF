@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using SimpleWPF.ViewModels;
+using SimpleWPF.ViewModels.Interfaces;
 
 namespace SimpleWPF.Views;
 
@@ -23,7 +22,7 @@ public partial class CrudControl : UserControl
             gridView.Columns.Add(new GridViewColumn
             {
                 Header = columnName,
-                DisplayMemberBinding = new Binding($"[{binding}]")
+                DisplayMemberBinding = new Binding($"{binding}")
             });
         }
         listView.View = gridView;

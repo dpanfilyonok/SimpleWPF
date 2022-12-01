@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SimpleWPF.ViewModels;
+namespace SimpleWPF.ViewModels.Interfaces;
 
 public interface IItemListViewModel
 {

@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using SimpleWPF.Models;
+using SimpleWPF.ViewModels.Interfaces;
 
 namespace SimpleWPF.ViewModels;
 

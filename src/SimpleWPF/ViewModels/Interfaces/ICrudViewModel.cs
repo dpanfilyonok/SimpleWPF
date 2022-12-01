@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-namespace SimpleWPF.ViewModels;
+namespace SimpleWPF.ViewModels.Interfaces;
 
 public interface ICrudViewModel<T> : IItemListViewModel
 {
@@ -11,7 +10,7 @@ public interface ICrudViewModel<T> : IItemListViewModel
     public ICommand RemoveCommand { get; }
     public ICommand UpdateCommand { get; }
 
-    public T SelectedItem { get; set; }
+    public T? SelectedItem { get; set; }
     public ObservableCollection<T> Items { get; set; }
     
 }

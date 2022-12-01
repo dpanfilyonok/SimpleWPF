@@ -1,123 +1,97 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SimpleWPF.Common;
 using SimpleWPF.Models;
 using SimpleWPF.Repositories;
+using SimpleWPF.ViewModels.Interfaces;
+using SimpleWPF.Views.Dialogs;
 
 namespace SimpleWPF.ViewModels;
 
-public class EmployeesViewModel : ICrudViewModel<Employee>
+public class EmployeesViewModel : ObservableObject, ICrudViewModel<Employee>
 {
     private readonly ICrudRepository<Employee, int> _employees;
+    private readonly ICrudRepository<Department, int> _departments;
 
-    public EmployeesViewModel(ICrudRepository<Employee, int> employees)
+    public EmployeesViewModel(ICrudRepository<Employee, int> employees, ICrudRepository<Department, int> departments)
     {
         _employees = employees;
+        _departments = departments;
         GetCommand = new RelayCommand(GetEmployeesMethod);
+        AddCommand = new AsyncRelayCommand(AddEmployeeMethod);
+        RemoveCommand = new AsyncRelayCommand<Employee>(RemoveEmployeeMethod, (e) => e != null);
+        UpdateCommand = new AsyncRelayCommand<Employee>(UpdateEmployeeMethod, (e) => e != null);
         
-        GetCommand.Execute(null);
+        _items = _employees.GetAll().ToObservableCollection();
     }
     
     public ICommand GetCommand { get; }
     public ICommand AddCommand { get; }
     public ICommand RemoveCommand { get; }
     public ICommand UpdateCommand { get; }
-    
-    public Employee SelectedItem { get; set; }
-    public ObservableCollection<Employee> Items { get; set; }
 
-    public IDictionary<string, string> ColumnsBindings { get; set; } = new Dictionary<string, string> {{"s", "Name"}};
-
-    public EmployeesViewModel()
+    private Employee? _selectedItem;
+    public Employee? SelectedItem 
     {
-        throw new System.NotImplementedException();
+        get => _selectedItem;
+        set => SetProperty(ref _selectedItem, value);
     }
+
+    private ObservableCollection<Employee> _items;
+    public ObservableCollection<Employee> Items 
+    {
+        get => _items;
+        set => SetProperty(ref _items, value);
+    }
+
+    public IDictionary<string, string> ColumnsBindings { get; set; } = new Dictionary<string, string>
+    {
+        {"Name", "Name"},
+        {"Surname", "Surname"},
+        {"Patronymic", "Patronymic"},
+        {"Date Of Birth", "DateOfBirth"},
+        {"Gender", "Gender"},
+        {"Department", "Department.Name"}
+    };
 
     private void GetEmployeesMethod()
     {
         Items = _employees.GetAll().ToObservableCollection();
-        // this.RaisePropertyChanged(() => this.Employees);
-        // Messenger.Default.Send<NotificationMessage>(new NotificationMessage("Employees Loaded."));
     }
     
-    // private void AddEmployeeMethod(object? employee)
-    // {
-    //     // Employees = _employees.GetAll().ToObservableCollection();
-    //     UserWindow userWindow = new UserWindow(new User());
-    //     if (userWindow.ShowDialog() == true)
-    //     {
-    //         User user = userWindow.User;
-    //         db.Users.Add(user);
-    //         db.SaveChanges();
-    //     }
-    // }
+    private async Task AddEmployeeMethod()
+    {
+        var employee = new Employee
+        {
+            DateOfBirth = DateTime.Now,
+            Gender = Gender.Male
+        };
+        var allDepartments = new List<Department> {new()};
+        var dialog = new EmployeeEditWindow {DataContext = new EmployeeViewModel(employee, allDepartments)};
+        if (dialog.ShowDialog() == true)
+        {
+            MessageBox.Show(employee.Gender.ToString());
+            MessageBox.Show(employee.DateOfBirth.ToString());
+            MessageBox.Show(employee.Department.Name);
+            // await _employees.AddAsync(employee);
+        }
+    }
+    
+    private async Task RemoveEmployeeMethod(Employee? employee)
+    {
+        if (employee != null) await _employees.DeleteAsync(employee);
+        GetEmployeesMethod();
+    }
+    
+    private async Task UpdateEmployeeMethod(Employee? employee)
+    {
+        if (employee != null) await _employees.UpdateAsync(employee);
+        GetEmployeesMethod();
+    }
 }
-
-/*
- * public RelayCommand AddCommand
-        {
-            get
-            {
-                return addCommand ??
-                  (addCommand = new RelayCommand((o) =>
-                  {
-                      UserWindow userWindow = new UserWindow(new User());
-                      if (userWindow.ShowDialog() == true)
-                      {
-                          User user = userWindow.User;
-                          db.Users.Add(user);
-                          db.SaveChanges();
-                      }
-                  }));
-            }
-        }
-        // команда редактирования
-        public RelayCommand EditCommand
-        {
-            get
-            {
-                return editCommand ??
-                  (editCommand = new RelayCommand((selectedItem) =>
-                  {
-                      // получаем выделенный объект
-                      User? user = selectedItem as User;
-                      if (user == null) return;
- 
-                      User vm = new User
-                      {
-                          Id = user.Id,
-                          Name = user.Name,
-                          Age = user.Age
-                      };
-                      UserWindow userWindow = new UserWindow(vm);
- 
- 
-                      if (userWindow.ShowDialog() == true)
-                      {
-                          user.Name = userWindow.User.Name;
-                          user.Age = userWindow.User.Age;
-                          db.Entry(user).State = EntityState.Modified;
-                          db.SaveChanges();
-                      }
-                  }));
-            }
-        }
-        // команда удаления
-        public RelayCommand DeleteCommand
-        {
-            get
-            {
-                return deleteCommand ??
-                  (deleteCommand = new RelayCommand((selectedItem) =>
-                  {
-                      // получаем выделенный объект
-                      User? user = selectedItem as User;
-                      if (user == null) return;
-                      db.Users.Remove(user);
-                      db.SaveChanges();
-                  }));
-            }
-        }
- */
