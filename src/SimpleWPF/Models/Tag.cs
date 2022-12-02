@@ -10,4 +10,9 @@ public class Tag : IEntity<int>
     [Required] public string? Name { get; set; }
 
     public List<Order> Orders { get; set; } = new();
+    
+    public override string ToString()
+    {
+        return $"{Name}";
+    }
 }

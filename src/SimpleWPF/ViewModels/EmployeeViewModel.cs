@@ -9,16 +9,27 @@ public class EmployeeViewModel : ObservableObject
 {
     public EmployeeViewModel(Employee employee, IReadOnlyList<Department> departments)
     {
-        Departments = departments;
         _employee = new ObservableEmployee(employee);
+        Departments = departments;
+        Employee.ErrorsChanged += (sender, args) =>
+        {
+            HasErrors = Employee.HasErrors;
+        };
     }
     
     private ObservableEmployee _employee;
-    public ObservableEmployee Employee 
+    public ObservableEmployee Employee
     {
         get => _employee;
         set => SetProperty(ref _employee, value);
     }
-    
+
+    private bool _hasErrors;
+    public bool HasErrors
+    {
+        get => _hasErrors;
+        set => SetProperty(ref _hasErrors, value);
+    }
+
     public IReadOnlyList<Department> Departments { get; }
 }

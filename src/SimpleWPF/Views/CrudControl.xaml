@@ -29,6 +29,7 @@
                 <Button Command="{Binding UpdateCommand}"
                         CommandParameter="{Binding SelectedItem}"
                         Style="{StaticResource ForEdit}">Edit</Button>
+                <Button Command="{Binding GetCommand}">Refresh</Button>
             </StackPanel>
             <ListView ItemsSource="{Binding Items}"
                       SelectedItem="{Binding SelectedItem}"

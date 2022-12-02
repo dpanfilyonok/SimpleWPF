@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using SimpleWPF.Repositories;
 
@@ -15,8 +16,9 @@ public class Employee : IEntity<int>
 
     public int? DepartmentId { get; set; }
     public Department? Department { get; set; }
-    
+
     public Department? SupervisorOfDepartment { get; set; }
+    public List<Order> Orders { get; set; } = new();
 
     public override string ToString()
     {

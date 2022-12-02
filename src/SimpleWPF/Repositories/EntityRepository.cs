@@ -23,7 +23,7 @@ public class EntityRepository<TEntity, TKey> : ICrudRepository<TEntity, TKey>
     
     public IQueryable<TEntity> GetAll()
     {
-        _logger.LogInformation("kek");
+        _logger.LogInformation("Getting all entities");
         return _context.Set<TEntity>().AsNoTracking();
     }
 
@@ -34,6 +34,7 @@ public class EntityRepository<TEntity, TKey> : ICrudRepository<TEntity, TKey>
 
     public async Task<TEntity?> GetAsync(TKey id)
     {
+        _logger.LogInformation("Getting entity by key {Id}", id);
         return await _context.FindAsync<TEntity>(id);
     }
 
@@ -42,16 +43,18 @@ public class EntityRepository<TEntity, TKey> : ICrudRepository<TEntity, TKey>
         return await _context.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(predicate);
     }
 
-    public async Task<TKey> AddAsync(TEntity item)
+    public async Task<TKey> AddAsync(TEntity entity)
     {
-        await _context.AddAsync(item);
+        _logger.LogInformation("Adding entity {Entity}", entity);
+        await _context.AddAsync(entity);
         await _context.SaveChangesAsync();
-        _context.Entry(item).State = EntityState.Detached;
-        return item.Id;
+        _context.Entry(entity).State = EntityState.Detached;
+        return entity.Id;
     }
 
     public async Task DeleteAsync(TEntity entity)
     {
+        _logger.LogInformation("Removing entity {Entity}", entity);
         _context.Set<TEntity>().Remove(entity);
         await _context.SaveChangesAsync();
         _context.Entry(entity).State = EntityState.Detached;
@@ -59,13 +62,9 @@ public class EntityRepository<TEntity, TKey> : ICrudRepository<TEntity, TKey>
 
     public async Task UpdateAsync(TEntity entity)
     {
+        _logger.LogInformation("Updating entity {Entity}", entity);
         _context.Set<TEntity>().Update(entity);
         await _context.SaveChangesAsync();
         _context.Entry(entity).State = EntityState.Detached;
-    }
-
-    public async Task SaveAsync()
-    {
-        await _context.SaveChangesAsync();
     }
 }

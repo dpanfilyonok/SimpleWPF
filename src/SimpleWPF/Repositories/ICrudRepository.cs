@@ -8,8 +8,7 @@ public interface ICrudRepository<TEntity, TKey> : IReadOnlyRepository<TEntity, T
     where TEntity : IEntity<TKey>
     where TKey : IEquatable<TKey>
 {
-    Task<TKey> AddAsync(TEntity item);
+    Task<TKey> AddAsync(TEntity entity);
     Task DeleteAsync(TEntity entity);
     Task UpdateAsync(TEntity entity);
-    Task SaveAsync();
 }

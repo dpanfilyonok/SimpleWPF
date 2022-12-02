@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -25,12 +24,13 @@ public class EmployeesViewModel : ObservableObject, ICrudViewModel<Employee>
     {
         _employees = employees;
         _departments = departments;
-        GetCommand = new RelayCommand(GetEmployeesMethod);
-        AddCommand = new AsyncRelayCommand(AddEmployeeMethod);
-        RemoveCommand = new AsyncRelayCommand<Employee>(RemoveEmployeeMethod);
-        UpdateCommand = new AsyncRelayCommand<Employee>(UpdateEmployeeMethod);
+        
+        GetCommand = new RelayCommand(GetEntitiesMethod);
+        AddCommand = new AsyncRelayCommand(AddEntityMethod);
+        RemoveCommand = new AsyncRelayCommand<Employee>(RemoveEntityMethod);
+        UpdateCommand = new AsyncRelayCommand<Employee>(UpdateEntityMethod);
 
-        GetEmployeesMethod();
+        GetEntitiesMethod();
     }
     
     public ICommand GetCommand { get; }
@@ -62,12 +62,12 @@ public class EmployeesViewModel : ObservableObject, ICrudViewModel<Employee>
         {"Department", "Department"}
     };
 
-    private void GetEmployeesMethod()
+    private void GetEntitiesMethod()
     {
         Items = _employees.GetAll().Include(e => e.Department).ToObservableCollection();
     }
     
-    private async Task AddEmployeeMethod()
+    private async Task AddEntityMethod()
     {
         var employee = new Employee
         {
@@ -84,17 +84,17 @@ public class EmployeesViewModel : ObservableObject, ICrudViewModel<Employee>
             employee.DepartmentId = employee.Department?.Id;
             employee.Department = null;
             await _employees.AddAsync(employee);
-            GetEmployeesMethod();
+            GetEntitiesMethod();
         }
     }
     
-    private async Task RemoveEmployeeMethod(Employee? employee)
+    private async Task RemoveEntityMethod(Employee? employee)
     {
         if (employee != null) await _employees.DeleteAsync(employee);
-        GetEmployeesMethod();
+        GetEntitiesMethod();
     }
     
-    private async Task UpdateEmployeeMethod(Employee? employee)
+    private async Task UpdateEntityMethod(Employee? employee)
     {
         if (employee == null) return;
         
@@ -105,7 +105,7 @@ public class EmployeesViewModel : ObservableObject, ICrudViewModel<Employee>
             employee.DepartmentId = employee.Department?.Id;
             employee.Department = null;
             await _employees.UpdateAsync(employee);
-            GetEmployeesMethod();
+            GetEntitiesMethod();
         }
     }
 }

@@ -3,42 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:system="clr-namespace:System;assembly=mscorlib"
-        xmlns:local="clr-namespace:SimpleWPF.Views"
+        xmlns:local="clr-namespace:SimpleWPF.Views.Dialogs"
         xmlns:vm="clr-namespace:SimpleWPF.ViewModels"
-        xmlns:model="clr-namespace:SimpleWPF.Models"
         mc:Ignorable="d"
-        Title="EmployeeWindow" Height="450" Width="300"
+        Title="EmployeeEditWindow" Height="450" Width="300"
         SizeToContent="WidthAndHeight"
         ResizeMode="NoResize"
         d:DataContext="{d:DesignInstance vm:EmployeeViewModel}">
     <Window.Resources>
-        <Style TargetType="TextBlock">
-            <Setter Property="Margin" Value="0 5 0 0" />
-        </Style>
-        <Style TargetType="StackPanel">
-            <Setter Property="Margin" Value="8 3 8 8 " />
-        </Style>
-        <Style TargetType="Button">
-            <Setter Property="MinWidth" Value="60" />
-            <Setter Property="Margin" Value="8" />
-        </Style>
-        <ObjectDataProvider x:Key="DataFromEnum" MethodName="GetValues"
-                            ObjectType="{x:Type system:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="model:Gender"/>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
-        <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button" x:Key="Save">
-            <Setter Property="IsEnabled" Value="True" />
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Employee.HasErrors}" Value="True">
-                    <Setter Property="IsEnabled" Value="False"></Setter>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
+        <ResourceDictionary Source="DialogResources.xaml" />
     </Window.Resources>
-    
     <Grid>
         <DockPanel LastChildFill="True">
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
@@ -47,7 +21,7 @@
             </StackPanel>
             <StackPanel>
                 <TextBlock Text="Name" />
-                <TextBox Text="{Binding Employee.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                <TextBox Text="{Binding Employee.Name, UpdateSourceTrigger=PropertyChanged}" />
                 
                 <TextBlock Text="Surname" />
                 <TextBox Text="{Binding Employee.Surname, UpdateSourceTrigger=PropertyChanged}" />

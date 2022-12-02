@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using SimpleWPF.TypeConverters;
 using SimpleWPF.ViewModels.Interfaces;
 
 namespace SimpleWPF.Views;
@@ -23,6 +24,9 @@ public partial class CrudControl : UserControl
             {
                 Header = columnName,
                 DisplayMemberBinding = new Binding($"{binding}")
+                {
+                    Converter = new ListTagTypeConverter()
+                }
             });
         }
         listView.View = gridView;
