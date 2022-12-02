@@ -12,18 +12,15 @@ public class EntityRepository<TEntity, TKey> : ICrudRepository<TEntity, TKey>
     where TEntity : class, IEntity<TKey>, new()
     where TKey : IEquatable<TKey>
 {
-    private readonly ILogger<EntityRepository<TEntity, TKey>> _logger;
     private readonly ApplicationContext _context;
 
-    public EntityRepository(ILogger<EntityRepository<TEntity, TKey>> logger, ApplicationContext context)
+    public EntityRepository(ApplicationContext context)
     {
-        _logger = logger;
         _context = context;
     }
     
     public IQueryable<TEntity> GetAll()
     {
-        _logger.LogInformation("Getting all entities");
         return _context.Set<TEntity>().AsNoTracking();
     }
 
@@ -34,7 +31,6 @@ public class EntityRepository<TEntity, TKey> : ICrudRepository<TEntity, TKey>
 
     public async Task<TEntity?> GetAsync(TKey id)
     {
-        _logger.LogInformation("Getting entity by key {Id}", id);
         return await _context.FindAsync<TEntity>(id);
     }
 
@@ -45,7 +41,6 @@ public class EntityRepository<TEntity, TKey> : ICrudRepository<TEntity, TKey>
 
     public async Task<TKey> AddAsync(TEntity entity)
     {
-        _logger.LogInformation("Adding entity {Entity}", entity);
         await _context.AddAsync(entity);
         await _context.SaveChangesAsync();
         _context.Entry(entity).State = EntityState.Detached;
@@ -54,7 +49,6 @@ public class EntityRepository<TEntity, TKey> : ICrudRepository<TEntity, TKey>
 
     public async Task DeleteAsync(TEntity entity)
     {
-        _logger.LogInformation("Removing entity {Entity}", entity);
         _context.Set<TEntity>().Remove(entity);
         await _context.SaveChangesAsync();
         _context.Entry(entity).State = EntityState.Detached;
@@ -62,7 +56,6 @@ public class EntityRepository<TEntity, TKey> : ICrudRepository<TEntity, TKey>
 
     public async Task UpdateAsync(TEntity entity)
     {
-        _logger.LogInformation("Updating entity {Entity}", entity);
         _context.Set<TEntity>().Update(entity);
         await _context.SaveChangesAsync();
         _context.Entry(entity).State = EntityState.Detached;

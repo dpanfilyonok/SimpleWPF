@@ -22,7 +22,7 @@ public class Employee : IEntity<int>
 
     public override string ToString()
     {
-        return $"{Name} {Surname} {Patronymic} -- {DateOfBirth} -- {Gender} -- {Department?.ToString() ?? "<no department>"}";
+        return $"{Name} {Surname} [{Department?.ToString() ?? "<no department>"}]";
     }
 }
 

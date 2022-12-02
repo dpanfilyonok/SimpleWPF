@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -44,7 +45,8 @@ public partial class App : Application
         
         services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(logger, true));
         
-        services.AddSingleton<ApplicationContext>();
+        services.AddDbContext<ApplicationContext>(
+            options => options.UseNpgsql("Host=localhost;Port=5433;Database=wpf;Username=postgres;Password=root"));
         
         services.AddSingleton<ICrudRepository<Employee, int>, EntityRepository<Employee, int>>();
         services.AddSingleton<ICrudRepository<Department, int>, EntityRepository<Department, int>>();
