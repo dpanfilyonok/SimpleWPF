@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Microsoft.EntityFrameworkCore;
 using SimpleWPF.Models;
 
@@ -14,13 +15,12 @@ public sealed class ApplicationContext : DbContext
     public ApplicationContext()
     {
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-        Database.EnsureDeleted(); 
         Database.EnsureCreated();  
     }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=test;Username=postgres;Password=root");
+        optionsBuilder.UseNpgsql("Host=localhost;Port=5433;Database=wpf;Username=postgres;Password=root");
         optionsBuilder.EnableSensitiveDataLogging();
     }
     

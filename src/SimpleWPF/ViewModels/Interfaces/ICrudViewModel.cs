@@ -12,5 +12,4 @@ public interface ICrudViewModel<T> : IItemListViewModel
 
     public T? SelectedItem { get; set; }
     public ObservableCollection<T> Items { get; set; }
-    
 }
