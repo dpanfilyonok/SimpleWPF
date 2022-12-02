@@ -1,4 +1,5 @@
 # SimpleWPF
+[![Build And Test](https://github.com/dpanfilyonok/SimpleWPF/actions/workflows/build-and-test.yml/badge.svg?branch=main)](https://github.com/dpanfilyonok/SimpleWPF/actions/workflows/build-and-test.yml)
 
 A desktop application to perform CRUD operations on a set of entities.
 
