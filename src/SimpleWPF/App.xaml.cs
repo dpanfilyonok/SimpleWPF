@@ -7,6 +7,7 @@ using Serilog;
 using SimpleWPF.Data;
 using SimpleWPF.Models;
 using SimpleWPF.Repositories;
+using SimpleWPF.Services;
 using SimpleWPF.ViewModels;
 using SimpleWPF.Views;
 
@@ -43,10 +44,16 @@ public partial class App : Application
         services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(logger, true));
         
         services.AddSingleton<ApplicationContext>();
+        
         services.AddSingleton<ICrudRepository<Employee, int>, EntityRepository<Employee, int>>();
         services.AddSingleton<ICrudRepository<Department, int>, EntityRepository<Department, int>>();
         services.AddSingleton<ICrudRepository<Order, int>, EntityRepository<Order, int>>();
         services.AddSingleton<ICrudRepository<Tag, int>, EntityRepository<Tag, int>>();
+
+        services.AddSingleton<EmployeeService>();
+        services.AddSingleton<DepartmentService>();
+        services.AddSingleton<OrderService>();
+        services.AddSingleton<TagService>();
 
         services.AddTransient<MainViewModel>();
         services.AddTransient<EmployeesViewModel>();

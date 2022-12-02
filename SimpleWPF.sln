@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3A991210-A4B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleWPF", "src\SimpleWPF\SimpleWPF.csproj", "{EFBC2893-FBBD-4267-B861-6368D91EA9AB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4B06A090-053F-41DF-825F-5717213D9582}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleWPF.Tests", "tests\SimpleWPF.Tests\SimpleWPF.Tests.csproj", "{13823CF5-958C-40CB-87AC-F657EDE2F3A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,8 +24,13 @@ Global
 		{EFBC2893-FBBD-4267-B861-6368D91EA9AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFBC2893-FBBD-4267-B861-6368D91EA9AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFBC2893-FBBD-4267-B861-6368D91EA9AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13823CF5-958C-40CB-87AC-F657EDE2F3A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13823CF5-958C-40CB-87AC-F657EDE2F3A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13823CF5-958C-40CB-87AC-F657EDE2F3A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13823CF5-958C-40CB-87AC-F657EDE2F3A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{EFBC2893-FBBD-4267-B861-6368D91EA9AB} = {3A991210-A4BC-49CE-A528-578FC6BB2013}
+		{13823CF5-958C-40CB-87AC-F657EDE2F3A4} = {4B06A090-053F-41DF-825F-5717213D9582}
 	EndGlobalSection
 EndGlobal

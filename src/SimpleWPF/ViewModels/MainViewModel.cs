@@ -1,8 +1,6 @@
-﻿using System.Windows;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
-using SimpleWPF.Models;
 using SimpleWPF.ViewModels.Interfaces;
 using SimpleWPF.Views;
 

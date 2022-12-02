@@ -7,7 +7,7 @@ namespace SimpleWPF.ViewModels;
 
 public class DepartmentViewModel : ObservableObject
 {
-    public DepartmentViewModel(Department department, IReadOnlyList<Employee> employees)
+    public DepartmentViewModel(Department department, IEnumerable<Employee> employees)
     {
         _department = new ObservableDepartment(department);
         Employees = employees;
@@ -31,5 +31,5 @@ public class DepartmentViewModel : ObservableObject
         set => SetProperty(ref _hasErrors, value);
     }
     
-    public IReadOnlyList<Employee> Employees { get; }
+    public IEnumerable<Employee> Employees { get; }
 }

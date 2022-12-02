@@ -11,7 +11,7 @@ public class ListTagTypeConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        return value is List<Tag> list ? string.Join(" ", list) : value;
+        return value is List<Tag> list ? string.Join(", ", list) : value;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

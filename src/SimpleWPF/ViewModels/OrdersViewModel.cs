@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.EntityFrameworkCore;
 using SimpleWPF.Common;
 using SimpleWPF.Models;
-using SimpleWPF.Repositories;
+using SimpleWPF.Services;
 using SimpleWPF.ViewModels.Interfaces;
 using SimpleWPF.Views.Dialogs;
 
@@ -17,11 +15,11 @@ namespace SimpleWPF.ViewModels;
 
 public class OrdersViewModel : ObservableObject, ICrudViewModel<Order>
 {
-    private readonly ICrudRepository<Order, int> _orders;
-    private readonly ICrudRepository<Employee, int> _employees;
-    private readonly ICrudRepository<Tag, int> _tags;
+    private readonly OrderService _orders;
+    private readonly EmployeeService _employees;
+    private readonly TagService _tags;
 
-    public OrdersViewModel(ICrudRepository<Order, int> orders, ICrudRepository<Employee, int> employees, ICrudRepository<Tag, int> tags)
+    public OrdersViewModel(OrderService orders, EmployeeService employees, TagService tags)
     {
         _orders = orders;
         _employees = employees;
@@ -63,10 +61,7 @@ public class OrdersViewModel : ObservableObject, ICrudViewModel<Order>
 
     private void GetEntitiesMethod()
     {
-        Items = _orders.GetAll()
-            .Include(o => o.Employee)
-            .Include(o => o.Tags)
-            .ToObservableCollection();
+        Items = _orders.GetOrders().ToObservableCollection();
     }
     
     private async Task AddEntityMethod()
@@ -75,34 +70,26 @@ public class OrdersViewModel : ObservableObject, ICrudViewModel<Order>
         {
             Name = "Enter order name...",
         };
-        
-        var allEmployees = _employees.GetAll().ToList();
-        var allTags = _tags.GetAll().ToList();
-        var vm = new OrderViewModel(order, allEmployees, allTags);
-        var dialog = new OrderEditWindow { DataContext = vm };
+        var vm = new OrderViewModel(order, _employees.GetEmployees(), _tags.GetTags());
+        var dialog = new OrderEditWindow
+        {
+            DataContext = vm
+        };
         if (dialog.ShowDialog() == true)
         {
-            var customTags = 
-                vm.CustomTags.Split()
+            vm.CustomTags.Split()
                 .Select(tag => new Tag { Name = tag })
-                .ToList();
+                .ToList()
+                .ForEach(tag => order.Tags.Add(tag));
 
-            foreach (var tag in customTags)
-            {
-                order.Tags.Add(tag);
-            }
-            
-            order.EmployeeId = order.Employee?.Id;
-            order.Employee = null;
-            
-            await _orders.AddAsync(order);
+            await _orders.AddOrderAsync(order);
             GetEntitiesMethod();
         }
     }
     
     private async Task RemoveEntityMethod(Order? order)
     {
-        if (order != null) await _orders.DeleteAsync(order);
+        if (order != null) await _orders.DeleteOrderAsync(order);
         GetEntitiesMethod();
     }
     
@@ -110,27 +97,19 @@ public class OrdersViewModel : ObservableObject, ICrudViewModel<Order>
     {
         if (order == null) return;
         
-        var allEmployees = _employees.GetAll().ToList();
-        var allTags = _tags.GetAll().ToList();
-        var vm = new OrderViewModel(order, allEmployees, allTags);
-        var dialog = new OrderEditWindow { DataContext = vm };
+        var vm = new OrderViewModel(order, _employees.GetEmployees(), _tags.GetTags());
+        var dialog = new OrderEditWindow
+        {
+            DataContext = vm
+        };
         if (dialog.ShowDialog() == true)
         {
-            var customTags = 
-                vm.CustomTags.Split()
-                    .Select(tag => new Tag { Name = tag })
-                    .ToList();
-
-            foreach (var tag in customTags)
-            {
-                await _tags.AddAsync(tag);
-                order.Tags.Add(tag);
-            }
+            vm.CustomTags.Split()
+                .Select(tag => new Tag { Name = tag })
+                .ToList()
+                .ForEach(tag => order.Tags.Add(tag));
             
-            order.EmployeeId = order.Employee?.Id;
-            order.Employee = null;
-            
-            await _orders.UpdateAsync(order);
+            await _orders.UpdateOrderAsync(order);
             GetEntitiesMethod();
         }
     }

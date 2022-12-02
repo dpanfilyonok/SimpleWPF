@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using SimpleWPF.Models;
 using SimpleWPF.Models.Observables;
@@ -8,7 +7,7 @@ namespace SimpleWPF.ViewModels;
 
 public class OrderViewModel : ObservableObject
 {
-    public OrderViewModel(Order order, IReadOnlyList<Employee> employees, IReadOnlyList<Tag> tags)
+    public OrderViewModel(Order order, IEnumerable<Employee> employees, IEnumerable<Tag> tags)
     {
         _order = new ObservableOrder(order);
         Employees = employees;
@@ -37,6 +36,6 @@ public class OrderViewModel : ObservableObject
         set => SetProperty(ref _hasErrors, value);
     }
 
-    public IReadOnlyList<Employee> Employees { get; }
-    public IReadOnlyList<Tag> Tags { get; }
+    public IEnumerable<Employee> Employees { get; }
+    public IEnumerable<Tag> Tags { get; }
 }

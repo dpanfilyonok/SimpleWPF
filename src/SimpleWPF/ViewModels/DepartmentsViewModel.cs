@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.EntityFrameworkCore;
 using SimpleWPF.Common;
 using SimpleWPF.Models;
-using SimpleWPF.Repositories;
+using SimpleWPF.Services;
 using SimpleWPF.ViewModels.Interfaces;
 using SimpleWPF.Views.Dialogs;
 
@@ -16,10 +14,10 @@ namespace SimpleWPF.ViewModels;
 
 public class DepartmentsViewModel : ObservableObject, ICrudViewModel<Department>
 {
-    private readonly ICrudRepository<Department, int> _departments;
-    private readonly ICrudRepository<Employee, int> _employees;
+    private readonly DepartmentService _departments;
+    private readonly EmployeeService _employees;
 
-    public DepartmentsViewModel(ICrudRepository<Department, int> departments, ICrudRepository<Employee, int> employees)
+    public DepartmentsViewModel(DepartmentService departments, EmployeeService employees)
     {
         _employees = employees;
         _departments = departments;
@@ -59,7 +57,7 @@ public class DepartmentsViewModel : ObservableObject, ICrudViewModel<Department>
     
     private void GetEntitiesMethod()
     {
-        Items = _departments.GetAll().Include(d => d.Supervisor).ToObservableCollection();
+        Items = _departments.GetDepartments().ToObservableCollection();
     }
     
     private async Task AddEntityMethod()
@@ -68,21 +66,20 @@ public class DepartmentsViewModel : ObservableObject, ICrudViewModel<Department>
         {
             Name = "Enter name..."
         };
-        
-        var allEmployees = _employees.GetAll().ToList();
-        var dialog = new DepartmentEditWindow { DataContext = new DepartmentViewModel(department, allEmployees) };
+        var dialog = new DepartmentEditWindow
+        {
+            DataContext = new DepartmentViewModel(department, _employees.GetEmployees())
+        };
         if (dialog.ShowDialog() == true)
         {
-            department.SupervisorId = department.Supervisor?.Id;
-            department.Supervisor = null;
-            await _departments.AddAsync(department);
+            await _departments.AddDepartmentAsync(department);
             GetEntitiesMethod();
         }
     }
     
     private async Task RemoveEntityMethod(Department? department)
     {
-        if (department != null) await _departments.DeleteAsync(department);
+        if (department != null) await _departments.DeleteDepartmentAsync(department);
         GetEntitiesMethod();
     }
     
@@ -90,13 +87,13 @@ public class DepartmentsViewModel : ObservableObject, ICrudViewModel<Department>
     {
         if (department == null) return;
         
-        var allEmployees = _employees.GetAll().ToList();
-        var dialog = new DepartmentEditWindow { DataContext = new DepartmentViewModel(department, allEmployees) };
+        var dialog = new DepartmentEditWindow
+        {
+            DataContext = new DepartmentViewModel(department,  _employees.GetEmployees())
+        };
         if (dialog.ShowDialog() == true)
         {
-            department.SupervisorId = department.Supervisor?.Id;
-            department.Supervisor = null;
-            await _departments.UpdateAsync(department);
+            await _departments.UpdateDepartmentAsync(department);
             GetEntitiesMethod();
         }
     }
