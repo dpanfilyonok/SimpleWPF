@@ -6,7 +6,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SimpleWPF.Common;
 using SimpleWPF.Models;
-using SimpleWPF.Services;
 using SimpleWPF.Services.Interfaces;
 using SimpleWPF.ViewModels.Interfaces;
 using SimpleWPF.Views.Dialogs;

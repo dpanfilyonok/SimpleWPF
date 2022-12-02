@@ -127,12 +127,6 @@ public class EmployeeServiceTests : IAsyncLifetime
         await context.Departments.AddRangeAsync(d1, d2);
         await context.Employees.AddRangeAsync(e1, e2, e3);
         await context.Orders.AddRangeAsync(o1, o2);
-        //
-        // modelBuilder.Entity<Tag>().HasData(
-        //     new Tag { Id = 1, Name = "T1" },
-        //     new Tag { Id = 2, Name = "T2" },
-        //     new Tag { Id = 3, Name = "T3" }
-        // );
 
         await context.SaveChangesAsync();
     }
