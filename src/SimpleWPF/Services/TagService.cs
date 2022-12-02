@@ -3,10 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using SimpleWPF.Models;
 using SimpleWPF.Repositories;
+using SimpleWPF.Services.Interfaces;
 
 namespace SimpleWPF.Services;
 
-public class TagService
+public class TagService : ITagService
 {
     private readonly ICrudRepository<Tag, int> _tags;
 

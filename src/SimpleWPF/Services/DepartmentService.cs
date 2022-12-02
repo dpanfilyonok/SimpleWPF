@@ -4,10 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SimpleWPF.Models;
 using SimpleWPF.Repositories;
+using SimpleWPF.Services.Interfaces;
 
 namespace SimpleWPF.Services;
 
-public class DepartmentService
+public class DepartmentService : IDepartmentService
 {
     private readonly ICrudRepository<Department, int> _departments;
 

@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using SimpleWPF.Common;
 using SimpleWPF.Models;
 using SimpleWPF.Services;
+using SimpleWPF.Services.Interfaces;
 using SimpleWPF.ViewModels.Interfaces;
 using SimpleWPF.Views.Dialogs;
 
@@ -15,10 +16,10 @@ namespace SimpleWPF.ViewModels;
 
 public class EmployeesViewModel : ObservableObject, ICrudViewModel<Employee>
 {
-    private readonly EmployeeService _employees;
-    private readonly DepartmentService _departments;
+    private readonly IEmployeeService _employees;
+    private readonly IDepartmentService _departments;
 
-    public EmployeesViewModel(EmployeeService employees, DepartmentService departments)
+    public EmployeesViewModel(IEmployeeService employees, IDepartmentService departments)
     {
         _employees = employees;
         _departments = departments;

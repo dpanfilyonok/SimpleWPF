@@ -8,6 +8,7 @@ using SimpleWPF.Data;
 using SimpleWPF.Models;
 using SimpleWPF.Repositories;
 using SimpleWPF.Services;
+using SimpleWPF.Services.Interfaces;
 using SimpleWPF.ViewModels;
 using SimpleWPF.Views;
 
@@ -50,10 +51,10 @@ public partial class App : Application
         services.AddSingleton<ICrudRepository<Order, int>, EntityRepository<Order, int>>();
         services.AddSingleton<ICrudRepository<Tag, int>, EntityRepository<Tag, int>>();
 
-        services.AddSingleton<EmployeeService>();
-        services.AddSingleton<DepartmentService>();
-        services.AddSingleton<OrderService>();
-        services.AddSingleton<TagService>();
+        services.AddSingleton<IEmployeeService, EmployeeService>();
+        services.AddSingleton<IDepartmentService, DepartmentService>();
+        services.AddSingleton<IOrderService, OrderService>();
+        services.AddSingleton<ITagService, TagService>();
 
         services.AddTransient<MainViewModel>();
         services.AddTransient<EmployeesViewModel>();

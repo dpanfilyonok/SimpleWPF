@@ -4,10 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SimpleWPF.Models;
 using SimpleWPF.Repositories;
+using SimpleWPF.Services.Interfaces;
 
 namespace SimpleWPF.Services;
 
-public class OrderService
+public class OrderService : IOrderService
 {
     private readonly ICrudRepository<Order, int> _orders;
 

@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using SimpleWPF.Common;
 using SimpleWPF.Models;
 using SimpleWPF.Services;
+using SimpleWPF.Services.Interfaces;
 using SimpleWPF.ViewModels.Interfaces;
 using SimpleWPF.Views.Dialogs;
 
@@ -15,11 +16,11 @@ namespace SimpleWPF.ViewModels;
 
 public class OrdersViewModel : ObservableObject, ICrudViewModel<Order>
 {
-    private readonly OrderService _orders;
-    private readonly EmployeeService _employees;
-    private readonly TagService _tags;
+    private readonly IOrderService _orders;
+    private readonly IEmployeeService _employees;
+    private readonly ITagService _tags;
 
-    public OrdersViewModel(OrderService orders, EmployeeService employees, TagService tags)
+    public OrdersViewModel(IOrderService orders, IEmployeeService employees, ITagService tags)
     {
         _orders = orders;
         _employees = employees;
