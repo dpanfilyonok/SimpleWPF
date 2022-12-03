@@ -31,6 +31,8 @@ public class DepartmentService : IDepartmentService
 
     public async Task DeleteDepartmentAsync(Department department)
     {
+        department.SupervisorId = department.Supervisor?.Id;
+        department.Supervisor = null;
         await _departments.DeleteAsync(department);
     }
 

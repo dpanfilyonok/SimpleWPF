@@ -34,6 +34,8 @@ public class OrderService : IOrderService
 
     public async Task DeleteOrderAsync(Order order)
     {
+        order.EmployeeId = order.Employee?.Id;
+        order.Employee = null;
         await _orders.DeleteAsync(order);
     }
 

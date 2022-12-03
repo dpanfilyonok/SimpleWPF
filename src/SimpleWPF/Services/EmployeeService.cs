@@ -31,6 +31,8 @@ public class EmployeeService : IEmployeeService
 
     public async Task DeleteEmployeeAsync(Employee employee)
     {
+        employee.DepartmentId = employee.Department?.Id;
+        employee.Department = null;
         await _employees.DeleteAsync(employee);
     }
 

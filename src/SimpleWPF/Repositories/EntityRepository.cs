@@ -49,9 +49,9 @@ public class EntityRepository<TEntity, TKey> : ICrudRepository<TEntity, TKey>
 
     public async Task DeleteAsync(TEntity entity)
     {
+        _context.Entry(entity).State = EntityState.Detached;
         _context.Set<TEntity>().Remove(entity);
         await _context.SaveChangesAsync();
-        _context.Entry(entity).State = EntityState.Detached;
     }
 
     public async Task UpdateAsync(TEntity entity)
